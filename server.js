@@ -25,20 +25,24 @@ app.get("/api/:date", function (req, res) {
   let userDate = req.params.date;
   let dateRegex = /^\d{4}\-\d{2}\-\d{2}$/;
   let utcRegex = /^\d{13}$/;
-  let utcString;
+  let utcInt;
   let dateString;
+  let invalid = true;
   if(dateRegex.test(userDate)){
     dateString = new Date(userDate).toUTCString();
-    utcString = Date.parse(userDate);
+    utcInt = Date.parse(userDate);
+    invalid = false;
   } else if(utcRegex.test(userDate)){
     dateString = new Date(parseInt(userDate)).toUTCString();
-    utcString = userDate;
-  } else{
+    utcInt = parseInt(userDate);
+    invalid = false;
+  } 
+  if(invalid){
     console.log("It's rubbish");
-    utcString = "Invalid";
-    dateString = "Invalid"
+    res.json({ error : "Invalid Date" });
+  } else{
+    res.json({unix: utcInt, utc: dateString});
   }
-  res.json({unix: utcString, utc: dateString});
 });
 
 
