@@ -22,8 +22,10 @@ app.get("/", function (req, res) {
 
 // date endpoint
 app.get("/api/:date", function (req, res) {
-  let userDate = req.params.date;
+  let digitRegex = /^\d+$/;
+  let userDate  = digitRegex.test(req.params.date ) ? parseInt(req.params.date) : req.params.date;
   let parsedDate = new Date(userDate);
+  console.log("parsedDate:",parsedDate, userDate);
 
   if(isNaN(parsedDate)){
     console.log("It's rubbish",userDate,parsedDate.toString());
